@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "518700017235",
+    "firebase_url": "https://ps-guide.firebaseio.com",
+    "project_id": "ps-guide",
+    "storage_bucket": "ps-guide.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:518700017235:android:05b2d44496f27cf71588a6",
+        "android_client_info": {
+          "package_name": "com.psguide.uttam"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "518700017235-q7dq77u9q8qs2qn0sspd21n5ivmr968e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.psguide.uttam",
+            "certificate_hash": "e9c161268858e100b63982e97ee71bd72e02d1aa"
+          }
+        },
+        {
+          "client_id": "518700017235-417htgkis8ck1ovvvidesc61j4tk6rlt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDugvFTiLOlH5PnUWtvqIATRPTUr-fpQNs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "518700017235-417htgkis8ck1ovvvidesc61j4tk6rlt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

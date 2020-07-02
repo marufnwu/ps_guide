@@ -1,0 +1,75 @@
+<resources>
+    <string name="app_name">Ps Guide</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+
+    <string name="bjp">উজ্জ্বল সেন সহ ৩৫ জন BJP কর্মী গ্রেফতার</string>
+
+    <string name="facebook_app_id">216350082602260</string>
+
+
+  <!--  Admob Details:
+
+   App id: ca-app-pub-5062721632208466~1515395830
+
+    Intristtial
+    ca-app-pub-5062721632208466/1970691405
+
+    Banners
+    ca-app-pub-5062721632208466/5199489974
+
+    Native Advance
+    ca-app-pub-5062721632208466/6129428265
+
+   -->
+
+
+    <string name="admob_app_id">ca-app-pub-5062721632208466~1515395830</string>
+    <string name="admob_interstitial_ad_unit">ca-app-pub-5062721632208466/1970691405</string>
+
+    <string name="admob_native_ad_unit">ca-app-pub-5062721632208466/6129428265</string>
+
+    <string name="admob_banner_ad_unit">ca-app-pub-5062721632208466/5199489974</string>
+
+
+    <string name="admob_video_ad_unit">ca-app-pub-5062721632208466/7897783424</string>
+    <string name="admob_dialog_inst_ad_unit">ca-app-pub-5062721632208466/3010426431</string>
+
+    <!--Admob Test Ad-->
+   <!-- <string name="admob_interstitial_ad_unit">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="admob_native_ad_unit">ca-app-pub-3940256099942544/2247696110</string>-->
+
+
+
+    <!--Facebook Native
+    2610756715869034_2610757352535637
+
+    Intristtial
+    2610756715869034_2610760439201995-->
+
+    <string name="facebook_native_ad_unit">2610756715869034_2610757352535637</string>
+    <string name="fb_int_ad">2610756715869034_2610760439201995</string>
+
+  <!--  Facebook Test Ad;
+    <string name="facebook_native_ad_unit">YOUR_PLACEMENT_ID</string>
+    <string name="fb_int_ad">YOUR_PLACEMENT_ID</string>-->
+
+
+    <string name="whatsapp_share_text">
+        Ps Guide এর বিশেষ ভিডিও দেখতে,
+        Install করুন Ps Guide App
+        >>
+
+    </string>
+
+    <string name="thanks">\"আপনাকে অনেক ধন্যবাদ আমাদের পোষ্ট টি দেখার জন্য\" \n\n
+
+পরবর্তী অংশ দেখার জন্য আপনাকে ছোট্ট একটি ভিডিও এড দেখতে হবে।</string>
+    <string name="continue_word">পরবর্তী অংশ দেখতে চান?</string>
+
+    <!--2423252694600394_2465826493676347-->
+
+
+</resources>

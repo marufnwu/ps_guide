@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="Home"
+            android:id="@+id/menuHome"
+            />
+
+        <item
+            android:icon="@drawable/ic_people_black_24dp"
+            android:title="Profile"
+            android:id="@+id/menuProfile"
+            />
+        <item
+            android:icon="@drawable/ic_share_black_24dp"
+            android:title="Share App"
+            android:id="@+id/menuShare"
+            />
+        <item
+            android:visible="false"
+            android:icon="@drawable/ic_credit_card_black_24dp"
+            android:title="Reward" />
+
+        <item
+            android:visible="false"
+            android:icon="@drawable/ic_payment_black_24dp"
+            android:title="Payment" />
+    </group>
+
+</menu>
