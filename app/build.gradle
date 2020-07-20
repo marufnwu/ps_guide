@@ -9,8 +9,8 @@ android {
         applicationId "com.psguide.uttam"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 10
-        versionName "2020.6.29.00.0"
+        versionCode 11
+        versionName "2020.7.15.00.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

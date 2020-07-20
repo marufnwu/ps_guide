@@ -98,6 +98,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PostActivity extends AppCompatActivity implements View.OnClickListener {
+    private boolean isActivityRunning = false;
     private static final int SHARE_CODE = 11001;
     private static final int WHATSAPP_RESULT_CODE = 11002;
     private static final int MESSENGER_RESULT_CODE = 11003;
@@ -276,7 +277,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-        loadVideoAd(false);
+       // loadVideoAd(false);
 
 
         // loadNativeAd(frameLayoutNativeBellowWebview);
@@ -466,7 +467,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         Window window = dialog.getWindow();
         window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-        if(!PostActivity.this.isFinishing()){
+        if(isActivityRunning){
             dialog.show();
         }
     }
@@ -474,71 +475,74 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initLikeDislike() {
 
-        final DatabaseReference likeRef =  mPostRef.child(String.valueOf(id)).child("like");
-        DatabaseReference thisPostLikeRef = likeRef.child(mAuth.getUid()).getRef();
-        final DatabaseReference disLikeRef =  mPostRef.child(String.valueOf(id)).child("dislike");
-               DatabaseReference thisPostDislikeRef =  disLikeRef.child(mAuth.getUid()).getRef();
+        if (mAuth.getUid() != null) {
+            final DatabaseReference likeRef = mPostRef.child(String.valueOf(id)).child("like");
+            DatabaseReference thisPostLikeRef = likeRef.child(mAuth.getUid()).getRef();
+            final DatabaseReference disLikeRef = mPostRef.child(String.valueOf(id)).child("dislike");
+            DatabaseReference thisPostDislikeRef = disLikeRef.child(mAuth.getUid()).getRef();
 
-        likeRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            likeRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                     txtPostLikeCount.setText(String.valueOf(dataSnapshot.getChildrenCount()));
 
-            }
+                }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        disLikeRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    txtDislikeCount.setText(String.valueOf(dataSnapshot.getChildrenCount()));
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        thisPostDislikeRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()){
-                    imgDisLike.setImageDrawable(getDrawable(R.drawable.dislike_active));
-                }else {
-                    imgDisLike.setImageDrawable(getDrawable(R.drawable.dislike));
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
                 }
-            }
+            });
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        thisPostLikeRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()){
-                    imgLike.setImageDrawable(getDrawable(R.drawable.like_active));
-                }else {
-                    imgLike.setImageDrawable(getDrawable(R.drawable.like1));
+            disLikeRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    txtDislikeCount.setText(String.valueOf(dataSnapshot.getChildrenCount()));
 
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+
+            thisPostDislikeRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        imgDisLike.setImageDrawable(getDrawable(R.drawable.dislike_active));
+                    } else {
+                        imgDisLike.setImageDrawable(getDrawable(R.drawable.dislike));
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+            thisPostLikeRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        imgLike.setImageDrawable(getDrawable(R.drawable.like_active));
+                    } else {
+                        imgLike.setImageDrawable(getDrawable(R.drawable.like1));
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+
     }
 
     private void loadInsAd() {
@@ -834,7 +838,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
                         //setHitcount(getDateDiff());
 
 
-                        initCountDown();
+                        //initCountDown();
 
 
                     }
@@ -934,6 +938,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onPause() {
         super.onPause();    //To change body of overridden methods use File | Settings | File Templates.
+        isActivityRunning = false;
         webView.onPause();
 
 
@@ -942,16 +947,22 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();    //To change body of overridden methods use File | Settings | File Templates.
+        isActivityRunning = true;
         webView.onResume();
+
     }
+
+
 
     @Override
     protected void onStart() {
         super.onStart();
+
+
         if (mAuth.getUid()!=null){
             Common.setOnlineStatus(mAuth.getUid(), true);
         }else {
-            startActivity(new Intent(this, PostActivity.class));
+            startActivity(new Intent(this, LoginActivity.class));
             finish();
         }
     }
@@ -1009,6 +1020,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
             return false;
         }
     }
+
 
 
 }
