@@ -219,12 +219,13 @@ public class SplashActivity extends AppCompatActivity {
                         showUpdateDialog();
                     }
                 }else {
-                    checkLogin();
+                    //checkLogin();
+
 
                 }
             }
             else
-                checkLogin();
+                //checkLogin();
             super.onPostExecute(jsonObject);
         }
     }
