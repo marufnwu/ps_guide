@@ -235,7 +235,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-        getUserProfile();
+        //getUserProfile();
+
         //loadRecentPost();
         //Common.deleteMyAccount(mAuth.getUid());
 
@@ -787,11 +788,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStart() {
         super.onStart();
-        if (mAuth.getUid()!=null){
+       /* if (mAuth.getUid()!=null){
             Common.setOnlineStatus(mAuth.getUid(), true);
         }else {
             startActivity(new Intent(this, PostActivity.class));
             finish();
-        }
+        }*/
     }
 }

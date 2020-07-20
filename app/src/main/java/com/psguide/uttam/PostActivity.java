@@ -267,9 +267,9 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
         loadData(id);
         postContinueDialog = new PostContinueDialog(this);
-        getLoggeduserData();
+        //getLoggeduserData();
 
-        initLikeDislike();
+        //initLikeDislike();
 
        //loadFbNativeAd();
         loadInsAd();
@@ -814,7 +814,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
                    //https://digital-wb.firebaseio.com/Post/1405
 
-                    DatabaseReference viewsRef = FirebaseDatabase.getInstance().getReference(FirebaseString.Post)
+                   /* DatabaseReference viewsRef = FirebaseDatabase.getInstance().getReference(FirebaseString.Post)
                                 .child(String.valueOf(id))
                                 .child(FirebaseString.Views);
 
@@ -832,7 +832,10 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
 
                                 viewsRef.child(viewsRef.push().getKey())
-                                        .setValue(view);
+                                        .setValue(view);*/
+
+
+
                         //checkLikeOrNot();
 
                         //setHitcount(getDateDiff());
@@ -959,12 +962,12 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         super.onStart();
 
 
-        if (mAuth.getUid()!=null){
+       /* if (mAuth.getUid()!=null){
             Common.setOnlineStatus(mAuth.getUid(), true);
         }else {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
-        }
+        }*/
     }
 
     @Override

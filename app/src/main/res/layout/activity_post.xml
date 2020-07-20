@@ -139,6 +139,7 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:visibility="gone"
         android:id="@+id/likeLayout"
         android:layout_above="@id/adView"
         android:layout_margin="10dp"

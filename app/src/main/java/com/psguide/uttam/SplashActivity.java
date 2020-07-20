@@ -220,11 +220,12 @@ public class SplashActivity extends AppCompatActivity {
                     }
                 }else {
                     //checkLogin();
-
+                    goToMainActivity();
 
                 }
             }
             else
+                goToMainActivity();
                 //checkLogin();
             super.onPostExecute(jsonObject);
         }
@@ -245,5 +246,10 @@ public class SplashActivity extends AppCompatActivity {
 
         builder.setCancelable(false);
         dialog = builder.show();
+    }
+
+    void goToMainActivity(){
+        startActivity(new Intent(SplashActivity.this, MainActivity.class));
+        finish();
     }
 }
