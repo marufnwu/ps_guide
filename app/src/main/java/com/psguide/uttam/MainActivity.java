@@ -23,6 +23,10 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 
 import com.google.firebase.database.DatabaseReference;
+import com.inmobi.ads.AdMetaInfo;
+import com.inmobi.ads.InMobiAdRequestStatus;
+import com.inmobi.ads.InMobiInterstitial;
+import com.inmobi.ads.listeners.InterstitialAdEventListener;
 import com.psguide.uttam.Adapter.PostListAdapter;
 import com.psguide.uttam.Common.Common;
 import com.psguide.uttam.Common.FirebaseString;
@@ -32,6 +36,7 @@ import com.psguide.uttam.Common.UserStatusService;
 import com.psguide.uttam.Interface.ITemClickListener;
 import com.psguide.uttam.Interface.OnPostItemClickListener;
 import com.psguide.uttam.Models.Activity;
+import com.psguide.uttam.Models.InMobi;
 import com.psguide.uttam.Models.Post.Posts;
 import com.psguide.uttam.Models.User;
 
@@ -94,6 +99,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
 
 import dmax.dialog.SpotsDialog;
@@ -128,13 +134,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageView imgNavProfile;
     TextView txtNavUserName, txtNavUserEmail;
 
-    int pastVisibleItem, visibleItemCount, totalItemCount, previousTotal = 0;
     int view_thresold = 10;
     private LinearLayoutManager layoutManager;
+    int pastVisibleItem, visibleItemCount, totalItemCount, previousTotal = 0;
+
     private int PAGE = 1, PAGE_SIZE = 10, TOTAL_PAGE = 0;
     boolean isLoading = true;
     private PostListAdapter adapter;
-    private List<Object> postsList = new ArrayList<>();
     private SpotsDialog waitingDialog;
     private InterstitialAd mInterstitialAd;
     private SpinKitView spinKitView;
@@ -142,7 +148,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Integer postId;
     private LinearLayout layoutReload;
     private Button btnReload;
-
+    public InterstitialAdEventListener mInterstitialAdEventListener;
+    private InMobiInterstitial inMobiinterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,7 +157,73 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
        /* Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);*/
+        mInterstitialAdEventListener = new InterstitialAdEventListener() {
+            @Override
+            public void onAdFetchFailed(@NonNull InMobiInterstitial inMobiInterstitial, @NonNull InMobiAdRequestStatus inMobiAdRequestStatus) {
+                super.onAdFetchFailed(inMobiInterstitial, inMobiAdRequestStatus);
+                Log.d("InMobi", "onAdFetchFailed");
+            }
+
+            @Override
+            public void onAdWillDisplay(@NonNull InMobiInterstitial inMobiInterstitial) {
+                super.onAdWillDisplay(inMobiInterstitial);
+                Log.d("InMobi", "onAdWillDisplay");
+
+            }
+
+            @Override
+            public void onAdDisplayed(@NonNull InMobiInterstitial inMobiInterstitial, @NonNull AdMetaInfo adMetaInfo) {
+                super.onAdDisplayed(inMobiInterstitial, adMetaInfo);
+                Log.d("InMobi", "onAdDisplayed");
+
+            }
+
+            @Override
+            public void onAdDisplayFailed(@NonNull InMobiInterstitial inMobiInterstitial) {
+                super.onAdDisplayFailed(inMobiInterstitial);
+                Log.d("InMobi", "onAdDisplayFailed");
+
+            }
+
+            @Override
+            public void onAdDismissed(@NonNull InMobiInterstitial inMobiInterstitial) {
+                super.onAdDismissed(inMobiInterstitial);
+                Log.d("InMobi", "onAdDismissed");
+                inMobiInterstitial.load();
+
+                Intent intent = new Intent(MainActivity.this, PostActivity.class);
+                intent.putExtra("id", postId);
+                startActivity(intent);
+
+            }
+
+            @Override
+            public void onUserLeftApplication(@NonNull InMobiInterstitial inMobiInterstitial) {
+                super.onUserLeftApplication(inMobiInterstitial);
+            }
+
+            @Override
+            public void onRewardsUnlocked(@NonNull InMobiInterstitial inMobiInterstitial, Map<Object, Object> map) {
+                super.onRewardsUnlocked(inMobiInterstitial, map);
+            }
+
+            @Override
+            public void onAdLoadSucceeded(@NonNull InMobiInterstitial inMobiInterstitial, @NonNull AdMetaInfo adMetaInfo) {
+                super.onAdLoadSucceeded(inMobiInterstitial, adMetaInfo);
+                Log.d("InMobi", "onAdLoadSucceeded");
+
+            }
+
+            @Override
+            public void onAdLoadFailed(@NonNull InMobiInterstitial inMobiInterstitial, @NonNull InMobiAdRequestStatus inMobiAdRequestStatus) {
+                super.onAdLoadFailed(inMobiInterstitial, inMobiAdRequestStatus);
+                Log.d("InMobi", "onAdLoadFailed "+inMobiAdRequestStatus.getMessage());
+
+            }
+        };
         MobileAds.initialize(this, getString(R.string.admob_app_id));
+        inMobiinterstitialAd = new InMobiInterstitial(MainActivity.this, InMobi.interstitial, mInterstitialAdEventListener);
+
 
 
         /*if (BuildConfig.DEBUG) {
@@ -160,7 +233,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId(getString(R.string.admob_interstitial_ad_unit));
 
-
+        inMobiinterstitialAd.load();
         loadIntsAd();
         final DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -192,8 +265,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mAuth = FirebaseAuth.getInstance();
 
-        Intent intent = new Intent(MainActivity.this, UserStatusService.class);
-        startService(intent);
+       /* Intent intent = new Intent(MainActivity.this, UserStatusService.class);
+        startService(intent);*/
 
         setFcmToken();
         FirebaseMessaging.getInstance().subscribeToTopic(TOPIC_ALL_USER);
@@ -216,9 +289,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 int id = menuItem.getItemId();
                 if (id == R.id.menuHome){
                     drawer.closeDrawer(GravityCompat.START);
-                }else if (id == R.id.menuProfile){
+                }/*else if (id == R.id.menuProfile){
                     startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-                }else if (id == R.id.menuShare){
+                }*/else if (id == R.id.menuShare){
                     startActivity(new Intent(MainActivity.this, AppShareActivity.class));
 
                 }
@@ -328,6 +401,66 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
             }
         });
+
+        mInterstitialAdEventListener = new InterstitialAdEventListener() {
+            @Override
+            public void onAdFetchFailed(@NonNull InMobiInterstitial inMobiInterstitial, @NonNull InMobiAdRequestStatus inMobiAdRequestStatus) {
+                super.onAdFetchFailed(inMobiInterstitial, inMobiAdRequestStatus);
+                Log.d("InMobi", "onAdFetchFailed");
+            }
+
+            @Override
+            public void onAdWillDisplay(@NonNull InMobiInterstitial inMobiInterstitial) {
+                super.onAdWillDisplay(inMobiInterstitial);
+                Log.d("InMobi", "onAdWillDisplay");
+
+            }
+
+            @Override
+            public void onAdDisplayed(@NonNull InMobiInterstitial inMobiInterstitial, @NonNull AdMetaInfo adMetaInfo) {
+                super.onAdDisplayed(inMobiInterstitial, adMetaInfo);
+                Log.d("InMobi", "onAdDisplayed");
+
+            }
+
+            @Override
+            public void onAdDisplayFailed(@NonNull InMobiInterstitial inMobiInterstitial) {
+                super.onAdDisplayFailed(inMobiInterstitial);
+                Log.d("InMobi", "onAdDisplayFailed");
+
+            }
+
+            @Override
+            public void onAdDismissed(@NonNull InMobiInterstitial inMobiInterstitial) {
+                super.onAdDismissed(inMobiInterstitial);
+                Log.d("InMobi", "onAdDismissed");
+
+            }
+
+            @Override
+            public void onUserLeftApplication(@NonNull InMobiInterstitial inMobiInterstitial) {
+                super.onUserLeftApplication(inMobiInterstitial);
+            }
+
+            @Override
+            public void onRewardsUnlocked(@NonNull InMobiInterstitial inMobiInterstitial, Map<Object, Object> map) {
+                super.onRewardsUnlocked(inMobiInterstitial, map);
+            }
+
+            @Override
+            public void onAdLoadSucceeded(@NonNull InMobiInterstitial inMobiInterstitial, @NonNull AdMetaInfo adMetaInfo) {
+                super.onAdLoadSucceeded(inMobiInterstitial, adMetaInfo);
+                Log.d("InMobi", "onAdLoadSucceeded");
+
+            }
+
+            @Override
+            public void onAdLoadFailed(@NonNull InMobiInterstitial inMobiInterstitial, @NonNull InMobiAdRequestStatus inMobiAdRequestStatus) {
+                super.onAdLoadFailed(inMobiInterstitial, inMobiAdRequestStatus);
+                Log.d("InMobi", "onAdLoadFailed "+inMobiAdRequestStatus.getMessage());
+
+            }
+        };
 
 
         DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
@@ -467,7 +600,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             objectList.addAll(posts);
                             //adapter.addItem(objectList);
 
-                            loadNativeAds(objectList);
+                           loadNativeAds(objectList);
 
 
                         }
@@ -498,9 +631,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         if (response.body()!=null){
 
                             if (response.body().size()>0){
+
                                 Headers header = response.headers();
                                 TOTAL_PAGE = Integer.parseInt(header.get("X-WP-TotalPages"));
-                                //postsList.clear();
+                                 List<Object> postsList = new ArrayList<>();
+
 
                                 List<Posts> posts = response.body();
                                 postsList.addAll(posts);
@@ -663,8 +798,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         // A native ad failed to load, check if the ad loader has finished loading
                         // and if so, insert the ads into the list.
                         Log.e("NativeAdFaild", errorCode+"");
+                        //updateItemWithNativeAd(objectList);
                         if (!adLoader.isLoading()) {
                             updateItemWithNativeAd(objectList);
+                        }else {
+                            Log.e("NativeAdFaild", "Ad loading");
+
                         }
                     }
                 }).build();
@@ -674,8 +813,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void updateItemWithNativeAd(List<Object> objectList) {
-
+        Log.d("ObjectListSize", ""+objectList.size());
         if (mNativeAds.size() <= 0) {
+            Log.d("NativeAdSize", mNativeAds.size()+"");
+
             loadRecycler(objectList);
         }else {
             Log.d("NativeAdSize", mNativeAds.size()+"");
@@ -770,9 +911,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             loadIntsAd();
 
-            Intent intent = new Intent(MainActivity.this, PostActivity.class);
-            intent.putExtra("id", postId);
-            startActivity(intent);
+            if (inMobiinterstitialAd.isReady()){
+                inMobiinterstitialAd.show();
+
+            }else {
+                inMobiinterstitialAd.load();
+                Log.d("InterStitialAd", "Inmobi Interstitial  Ad not Loaded");
+                Intent intent = new Intent(MainActivity.this, PostActivity.class);
+                intent.putExtra("id", postId);
+                startActivity(intent);
+            }
+
+
         }
     }
 
@@ -795,4 +945,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             finish();
         }*/
     }
+
 }

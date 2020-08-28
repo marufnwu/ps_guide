@@ -850,7 +850,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public void onFailure(Call<Posts> call, Throwable t) {
-                Log.d("PostRetriveError", t.getMessage());
+                //Log.d("PostRetriveError", t.getMessage());
                 Toast.makeText(PostActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
                 dissmissWaitingDialog();
 

@@ -82,7 +82,7 @@ public class MyApplication extends Application {
         boolean con = false;
         if (NInfo != null) {
             try {
-                if (InetAddress.getByName("https://mediacell.com").isReachable(30000)) {
+                if (InetAddress.getByName("https://www.google.com").isReachable(30000)) {
                     con = true;
                 } else {
                     con = false;

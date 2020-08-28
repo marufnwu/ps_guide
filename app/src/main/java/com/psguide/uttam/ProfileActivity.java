@@ -54,7 +54,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         waitingDialog = new SpotsDialog(this);
 
 
-        if (mAuth!=null){
+        if (mAuth.getCurrentUser()!=null){
 
             loadData(mUser);
         }else {

@@ -1,6 +1,7 @@
 package com.psguide.uttam;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
@@ -26,10 +27,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.inmobi.sdk.InMobiSdk;
+import com.inmobi.sdk.SdkInitializationListener;
 import com.psguide.uttam.Common.Common;
 import com.psguide.uttam.Models.Activity;
+import com.psguide.uttam.Models.InMobi;
 import com.psguide.uttam.Models.User;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -61,7 +66,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
+        initInmobi();
         getCurrentVersion();
     }
 
@@ -251,5 +256,29 @@ public class SplashActivity extends AppCompatActivity {
     void goToMainActivity(){
         startActivity(new Intent(SplashActivity.this, MainActivity.class));
         finish();
+    }
+
+    public void initInmobi(){
+        JSONObject consentObject = new JSONObject();
+        try {
+            // Provide correct consent value to sdk which is obtained by User
+            consentObject.put(InMobiSdk.IM_GDPR_CONSENT_AVAILABLE, true);
+            // Provide 0 if GDPR is not applicable and 1 if applicable
+            consentObject.put("gdpr", "1");
+            // Provide user consent in IAB format
+            //consentObject.put(InMobiSdk.IM_GDPR_CONSENT_IAB, "");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        InMobiSdk.init(this, InMobi.add_id, consentObject, new SdkInitializationListener() {
+            @Override
+            public void onInitializationComplete(@Nullable Error error) {
+                if (null != error) {
+                    Log.e("InMobi", "InMobi Init failed -" + error.getMessage());
+                } else {
+                    Log.d("InMobi", "InMobi Init Successful");
+                }
+            }
+        });
     }
 }

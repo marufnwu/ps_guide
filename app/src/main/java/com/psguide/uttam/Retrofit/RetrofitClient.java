@@ -53,7 +53,7 @@ public class RetrofitClient {
                 //.cache(cache())
                 .addInterceptor(httpLoggingInterceptor()) // used if network off OR on
                 .addNetworkInterceptor(networkInterceptor()) // only used when network is on
-                .addInterceptor(offlineInterceptor())
+                //.addInterceptor(offlineInterceptor())
                 .readTimeout(60, TimeUnit.SECONDS)
                 .connectTimeout(60, TimeUnit.SECONDS)
                 .build();
